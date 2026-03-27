@@ -41,7 +41,7 @@ function normalizePossibleLocalImagePath(text: string | undefined): string | nul
 }
 
 function shouldUseCard(text: string): boolean {
-  return /```[\s\S]*?```/.test(text) || /\|.+\|[\r\n]+\|[-:| ]+\|/.test(text);
+  return /`[\s\S]*?`/.test(text) || /\|.+\|[\r\n]+\|[-:| ]+\|/.test(text);
 }
 
 function resolveReplyToMessageId(params: {

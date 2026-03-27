@@ -19,20 +19,24 @@ services:
       TZ: ${OPENCLAW_TZ:-UTC}
       GOG_KEYRING_PASSWORD: ${GOG_KEYRING_PASSWORD:-}
       GOG_ACCOUNT: nuwjbdhhdej827263@gmail.com
+      HTTP_PROXY: http://192.168.50.50:7890
+      HTTPS_PROXY: http://192.168.50.50:7890
+      NO_PROXY: localhost,127.0.0.1,::1,192.168.50.0/24,open.feishu.cn,feishu.cn,lark.com,*.feishu.cn,*.lark.com
       OPENROUTER_API_KEY: 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
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
-      - ${OPENCLAW_WORKSPACE_DIR}/skills:/home/node/skills
       - ${LINUXBREW_DIR}:/home/linuxbrew
       - ${NPM_GLOBAL_DIR}:/home/node/.npm-global
       - ${GOG_CONFIG_DIR:-~/.openclaw-gogcli}:/home/node/.config/gogcli
-      - /home/niu/code:/home/node/code
-      ## Docker socket mount for managing host Docker from inside the container.
-      ## DOCKER_GID must match the host's docker group GID (run: stat -c '%g' /var/run/docker.sock).
-      - /var/run/docker.sock:/var/run/docker.sock
-    group_add:
-      - "${DOCKER_GID:-988}"
+      ## Uncomment the lines below to enable sandbox isolation
+      ## (agents.defaults.sandbox). Requires Docker CLI in the image
+      ## (build with --build-arg OPENCLAW_INSTALL_DOCKER_CLI=1) or use
+      ## scripts/docker/setup.sh with OPENCLAW_SANDBOX=1 for automated setup.
+      ## Set DOCKER_GID to the host's docker group GID (run: stat -c '%g' /var/run/docker.sock).
+      # - /var/run/docker.sock:/var/run/docker.sock
+    # group_add:
+    #   - "${DOCKER_GID:-999}"
     ports:
       - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
@@ -87,15 +91,16 @@ services:
       TZ: ${OPENCLAW_TZ:-UTC}
       GOG_KEYRING_PASSWORD: ${GOG_KEYRING_PASSWORD:-}
       GOG_ACCOUNT: nuwjbdhhdej827263@gmail.com
+      HTTP_PROXY: http://192.168.50.50:7890
+      HTTPS_PROXY: http://192.168.50.50:7890
+      NO_PROXY: localhost,127.0.0.1,::1,192.168.50.0/24,open.feishu.cn,feishu.cn,lark.com,*.feishu.cn,*.lark.com
       OPENROUTER_API_KEY: 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
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
-      - ${OPENCLAW_WORKSPACE_DIR}/skills:/home/node/skills
       - ${LINUXBREW_DIR}:/home/linuxbrew
       - ${NPM_GLOBAL_DIR}:/home/node/.npm-global
       - ${GOG_CONFIG_DIR:-~/.openclaw-gogcli}:/home/node/.config/gogcli
-      - /home/niu/code:/home/node/code
     stdin_open: true
     tty: true
     init: true
